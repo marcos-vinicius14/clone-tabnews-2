@@ -1,4 +1,3 @@
-
 import useSWR from "swr";
 
 async function fetchApi(key) {
@@ -12,9 +11,7 @@ export default function StatusPage() {
     <>
       <h1>Status</h1>
       <UpdatedAt />
-
-      <h1>Open connections</h1>
-      <ActivedConnections />
+      <DatabaseStatus />
     </>
   );
 }
@@ -30,18 +27,14 @@ function UpdatedAt() {
     updatedText = new Date(data.updated_at).toLocaleString("pt-BR");
   }
 
-  return (
-    <div>
-      Ultima atualizacao: {updatedText}
-    </div>
-  );
+  return <div>Ultima atualizacao: {updatedText}</div>;
 }
 
 //TODO: Criar componente para mostrar quantidade de connections, versao do PG, quantidade max connections
 
 function DatabaseStatus() {
   const { isLoading, data } = useSWR("/api/v1/status", fetchApi, {
-    refreshInterval: 2000
+    refreshInterval: 2000,
   });
 
   let databaseStatusInformation = "Carregando...";
@@ -49,15 +42,11 @@ function DatabaseStatus() {
   if (!isLoading && data) {
     databaseStatusInformation = (
       <>
+        <div>Version: {data.dependencies.database.version}</div>
         <div>
-          Version: {data.dependencies.database.version}
+          Open Connections: {data.dependencies.database.opened_connections}
         </div>
-        <div>
-          Open Connections: {data.dependencies.opened_connections}
-        </div>
-        <div>
-          Max connections: {data.dependencies.database.max_connections}
-        </div>
+        <div>Max connections: {data.dependencies.database.max_connections}</div>
       </>
     );
   }
@@ -68,5 +57,4 @@ function DatabaseStatus() {
       <div>{databaseStatusInformation}</div>
     </>
   );
-
 }
