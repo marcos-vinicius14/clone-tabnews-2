@@ -30,8 +30,6 @@ function UpdatedAt() {
   return <div>Ultima atualizacao: {updatedText}</div>;
 }
 
-//TODO: Criar componente para mostrar quantidade de connections, versao do PG, quantidade max connections
-
 function DatabaseStatus() {
   const { isLoading, data } = useSWR("/api/v1/status", fetchApi, {
     refreshInterval: 2000,
